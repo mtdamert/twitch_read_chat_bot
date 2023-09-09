@@ -9,10 +9,10 @@ const client = new tmi.Client({
     reconnect: true
   },
   identity: {
-    username: 'teapup',
+    username: process.env.BOT_NAME,
     password: process.env.TWITCH_OAUTH_TOKEN
   },
-  channels: ['teapup']
+  channels: [process.env.RUNS_ON_CHANNEL]
 });
 
 client.connect();
@@ -22,7 +22,7 @@ client.on('message', (channel, tags, message, self) => {
   // Ignore echoed messages.
   if (self) return;
 
-  if (message.toLowerCase() === '!teapup') {
-    client.say(channel, `@${tags.username}, hi, from my bot`);
+  if (message.toLowerCase() === '!hello') {
+    client.say(channel, `@${tags.username}, hi, from my bot!`);
   }
 });
