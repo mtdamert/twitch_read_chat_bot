@@ -18,6 +18,10 @@ const client = new tmi.Client({
 
 client.connect();
 
+function prettyPrintNumber(number) {
+	return formattedNumber = ("0" + number).slice(-2);
+}
+
 // Main loop
 client.on('message', (channel, tags, message, self) => {
 	// Ignore echoed messages.
@@ -29,10 +33,20 @@ client.on('message', (channel, tags, message, self) => {
   
 	// Log message to file
 	const nowDate = new Date();
-	const nowDateStr = nowDate.getMonth() + "/" + nowDate.getDate() + "/" + nowDate.getFullYear() + " " + nowDate.getHours() + ":" + nowDate.getMinutes() + ":" + nowDate.getSeconds();
-	fs.appendFile("output.txt", `${nowDateStr} ${tags.username}: ${message}\n`, function(err) {
+	const nowDateStr = prettyPrintNumber(nowDate.getMonth()) + "/" + prettyPrintNumber(nowDate.getDate()) + "/" + nowDate.getFullYear()
+		+ " " + prettyPrintNumber(nowDate.getHours()) + ":" + prettyPrintNumber(nowDate.getMinutes()) + ":" + prettyPrintNumber(nowDate.getSeconds());
+	
+	// Log all chat to the same file
+	fs.appendFile("log.txt", `${nowDateStr} ${tags.username}: ${message}\n`, function(err) {
 		if(err) {
 			return console.log(err);
 		}
-	}); 	
+	});
+	
+	// Log chat to a file where it can easily be loaded into another app
+	fs.appendFile("chat.txt", `${tags.username}, ${message}\n`, function(err) {
+		if(err) {
+			return console.log(err);
+		}
+	});
 });
